@@ -1,0 +1,132 @@
+@layout()
+
+  {{-- Page Header --}}
+  <section class="pp-feed" style="padding-top: 4rem; padding-bottom: 4rem;">
+    <div class="pp-section-header" style="margin-bottom: 2rem;">
+      <span class="pp-section-eyebrow">📣 Le confessionnal de Polytech</span>
+      <h1 class="pp-section-title">Les Anecdotes de l'ENSPY</h1>
+      <p class="pp-section-subtitle">Découvrez ce que les Pipo partagent en tout anonymat et exprimez-vous.</p>
+      
+      <div style="margin-top: 2rem;">
+        <a href="{{ route('messages.create') }}" class="pp-btn pp-btn--primary" style="font-size: 0.95rem; padding: 0.7rem 1.5rem;">
+          ✍️ Partager mon anecdote
+        </a>
+      </div>
+    </div>
+
+    {{-- Grille des anecdotes --}}
+    <div class="pp-cards-grid" role="list" aria-label="Fil des anecdotes anonymes">
+      @each(message in messages)
+        <article class="pp-card fade-up" id="card-{{ message.id }}" role="listitem">
+          <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+          <p class="pp-card__body">
+            {{ message.content }}
+          </p>
+          
+          @let(visitorReaction = message.reactions.find(r => r.visitorToken === visitorToken))
+          
+          <div class="pp-card__reactions" aria-label="Réactions" data-message-id="{{ message.id }}" style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem;">
+            @let(likeCount = message.reactions.filter(r => r.type === 'like').length)
+            @let(dislikeCount = message.reactions.filter(r => r.type === 'dislike').length)
+            @let(laughCount = message.reactions.filter(r => r.type === 'laugh').length)
+            @let(loveCount = message.reactions.filter(r => r.type === 'love').length)
+            @let(fireCount = message.reactions.filter(r => r.type === 'fire').length)
+
+            <button class="pp-reaction {{ visitorReaction?.type === 'like' ? 'pp-reaction--active' : '' }}" data-type="like" aria-label="Like">
+              👍 <span>{{ likeCount }}</span>
+            </button>
+            <button class="pp-reaction {{ visitorReaction?.type === 'dislike' ? 'pp-reaction--active' : '' }}" data-type="dislike" aria-label="Dislike">
+              👎 <span>{{ dislikeCount }}</span>
+            </button>
+            <button class="pp-reaction {{ visitorReaction?.type === 'laugh' ? 'pp-reaction--active' : '' }}" data-type="laugh" aria-label="Rire">
+              😂 <span>{{ laughCount }}</span>
+            </button>
+            <button class="pp-reaction {{ visitorReaction?.type === 'love' ? 'pp-reaction--active' : '' }}" data-type="love" aria-label="Adorer">
+              ❤️ <span>{{ loveCount }}</span>
+            </button>
+            <button class="pp-reaction {{ visitorReaction?.type === 'fire' ? 'pp-reaction--active' : '' }}" data-type="fire" aria-label="Feu">
+              🔥 <span>{{ fireCount }}</span>
+            </button>
+          </div>
+
+          <footer class="pp-card__footer">
+            <div class="pp-card__author">
+              <div class="pp-card__avatar" aria-hidden="true">A</div>
+              <span>Anonyme</span>
+            </div>
+            <time datetime="{{ message.createdAt.toISO() }}">{{ message.createdAt.toRelative() }}</time>
+          </footer>
+        </article>
+      @else
+        <div style="grid-column: 1 / -1; text-align: center; padding: 4rem 2rem; color: var(--text-light);">
+          <p style="font-size: 1.25rem; margin-bottom: 0.5rem; font-weight: 600; color: var(--blue-dark);">Silence radio...</p>
+          <p style="margin-bottom: 1.5rem;">Aucune anecdote n'a encore été publiée.</p>
+          <p>Soyez le tout premier à rompre la glace !</p>
+          <div style="margin-top: 1.5rem;">
+            <a href="{{ route('messages.create') }}" class="pp-btn pp-btn--primary">
+              ✍️ Publier la première anecdote
+            </a>
+          </div>
+        </div>
+      @end
+    </div>
+  </section>
+
+  {{-- Script de gestion des réactions en AJAX --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const reactionContainers = document.querySelectorAll('.pp-card__reactions');
+      
+      reactionContainers.forEach(container => {
+        const messageId = container.dataset.messageId;
+        const buttons = container.querySelectorAll('.pp-reaction');
+        
+        buttons.forEach(button => {
+          button.addEventListener('click', async (e) => {
+            e.preventDefault();
+            const type = button.dataset.type;
+            
+            try {
+              const response = await fetch(`/messages/${messageId}/react`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Accept': 'application/json',
+                  'x-csrf-token': '{{ csrfToken }}'
+                },
+                body: JSON.stringify({ type })
+              });
+              
+              if (!response.ok) {
+                throw new Error('Erreur réseau lors de la réaction');
+              }
+              
+              const data = await response.json();
+              
+              // Mettre à jour l'état de tous les boutons de cette carte
+              buttons.forEach(btn => {
+                const btnType = btn.dataset.type;
+                const countSpan = btn.querySelector('span');
+                
+                // Mettre à jour le compteur
+                if (countSpan && data.counts[btnType] !== undefined) {
+                  countSpan.textContent = data.counts[btnType];
+                }
+                
+                // Activer / Désactiver la classe active
+                if (data.userReaction === btnType) {
+                  btn.classList.add('pp-reaction--active');
+                } else {
+                  btn.classList.remove('pp-reaction--active');
+                }
+              });
+            } catch (error) {
+              console.error('Erreur:', error);
+            }
+          });
+        });
+      });
+    });
+  </script>
+
+@end

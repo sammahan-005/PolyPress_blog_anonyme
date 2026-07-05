@@ -1,0 +1,276 @@
+@layout()
+
+  {{-- ╔══════════════════════════════════════════════════════╗
+       ║   SECTION HERO                                       ║
+       ╚══════════════════════════════════════════════════════╝ --}}
+  <section class="pp-hero" aria-labelledby="hero-title">
+
+    {{-- Formes décoratives --}}
+    <div class="pp-hero__shapes" aria-hidden="true">
+      <i></i><i></i><i></i>
+    </div>
+
+    <div class="pp-hero__content">
+
+      {{-- Badge animé --}}
+      <div class="pp-badge fade-up" aria-label="Nouveau — Plateforme 100% anonyme">
+        <span class="pp-badge__dot"></span>
+        Plateforme 100 % anonyme · PolyPress 2025–2026
+      </div>
+
+      {{-- Titre principal --}}
+      <h1 class="pp-hero__title fade-up fade-up-d1" id="hero-title">
+        Ce qui se passe à <span class="highlight">Polytech</span>,<br/>
+        reste sur PolyPress.
+      </h1>
+
+      {{-- Slogan en Dancing Script --}}
+      <span class="pp-hero__slogan fade-up fade-up-d2" role="doc-subtitle">
+        Pipo life, Pipo news
+      </span>
+
+      <p class="pp-hero__desc fade-up fade-up-d3">
+        Partage tes anecdotes, confessions et coups de gueule de la vie à l'ENSPY.
+        Zéro identité révélée, 100 % polyen authentique.
+      </p>
+
+      {{-- Boutons d'action --}}
+      <div class="pp-hero__actions fade-up fade-up-d4">
+        <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="hero-cta-publier">
+          ✍️ Publier un message anonyme
+        </a>
+        <a href="/messages" class="pp-btn pp-btn--hero" style="background:rgba(255,255,255,0.12);color:#fff;border:2px solid rgba(255,255,255,0.3);" id="hero-cta-feed">
+          📰 Lire les anecdotes
+        </a>
+      </div>
+
+    </div>
+
+    {{-- Vague de transition vers la section suivante --}}
+    <div class="pp-hero__wave" aria-hidden="true">
+      <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+        <path d="M0,30 C360,60 1080,0 1440,30 L1440,60 L0,60 Z" fill="#f8fafc"/>
+      </svg>
+    </div>
+
+  </section>
+
+
+  {{-- ╔══════════════════════════════════════════════════════╗
+       ║   SECTION STATS (chiffres clés)                     ║
+       ╚══════════════════════════════════════════════════════╝ --}}
+  <section class="pp-stats" aria-label="Chiffres clés de PolyPress">
+    <div class="pp-stats__grid">
+
+      <div class="pp-stat" id="stat-messages">
+        <div class="pp-stat__number">247</div>
+        <div class="pp-stat__label">Messages publiés</div>
+      </div>
+
+      <div class="pp-stat" id="stat-users">
+        <div class="pp-stat__number">1 200+</div>
+        <div class="pp-stat__label">Pipo lecteurs</div>
+      </div>
+
+      <div class="pp-stat" id="stat-reactions">
+        <div class="pp-stat__number">4 800</div>
+        <div class="pp-stat__label">Réactions générées</div>
+      </div>
+
+      <div class="pp-stat" id="stat-anon">
+        <div class="pp-stat__number">100 %</div>
+        <div class="pp-stat__label">Anonymat garanti</div>
+      </div>
+
+    </div>
+  </section>
+
+
+  {{-- ╔══════════════════════════════════════════════════════╗
+       ║   SECTION FEED — Dernières Anecdotes                ║
+       ╚══════════════════════════════════════════════════════╝ --}}
+  <section class="pp-feed" id="feed" aria-labelledby="feed-title">
+
+    <header class="pp-section-header">
+      <span class="pp-section-eyebrow">📣 Fraîchement confessé</span>
+      <h2 class="pp-section-title" id="feed-title">Dernières Anecdotes</h2>
+      <p class="pp-section-subtitle">Les témoignages authentiques de la communauté polyenne</p>
+    </header>
+
+    <div class="pp-cards-grid" role="list" aria-label="Fil des anecdotes anonymes">
+
+      {{-- ─── Carte 1 ─────────────────────────────────────── --}}
+      <article class="pp-card fade-up" id="card-1" role="listitem" aria-label="Anecdote — Examen raté">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="pp-card__tag pp-card__tag--blue">🎓 Examens</span>
+        </div>
+        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+        <p class="pp-card__body">
+          J'ai confondu la salle d'examen de Maths 3 avec celle de Chimie Organique.
+          J'ai passé 20 minutes à chercher mon nom sur la liste avant de réaliser que
+          la feuille de sujet parlait de… benzène. J'ai quand même tenté une réponse.
+          À voir ce que le prof en pense. 😅
+        </p>
+        <div class="pp-card__reactions" aria-label="Réactions">
+          <button class="pp-reaction" id="card-1-like" aria-label="😂 42 personnes ont trouvé ça drôle">😂 <span>42</span></button>
+          <button class="pp-reaction" id="card-1-love" aria-label="❤️ 18 personnes ont aimé">❤️ <span>18</span></button>
+        </div>
+        <footer class="pp-card__footer">
+          <div class="pp-card__author">
+            <div class="pp-card__avatar" aria-hidden="true">A</div>
+            <span>Anonyme</span>
+          </div>
+          <time datetime="2025-01-15T10:00">il y a 2 heures</time>
+        </footer>
+      </article>
+
+      {{-- ─── Carte 2 ─────────────────────────────────────── --}}
+      <article class="pp-card fade-up fade-up-d1" id="card-2" role="listitem" aria-label="Anecdote — Cantine">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="pp-card__tag pp-card__tag--orange">🍽️ Cantine</span>
+        </div>
+        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+        <p class="pp-card__body">
+          La cantine a servi du riz blanc avec une sauce dont personne n'a pu identifier
+          l'origine. Un de mes camarades a dit que ça ressemblait à de la colle de BTP.
+          Trois semaines plus tard, on mange encore la même chose. On a arrêté de poser
+          des questions. C'est devenu "la sauce mystérieuse de Poly".
+        </p>
+        <div class="pp-card__reactions" aria-label="Réactions">
+          <button class="pp-reaction" id="card-2-like" aria-label="😂 87 personnes ont trouvé ça drôle">😂 <span>87</span></button>
+          <button class="pp-reaction" id="card-2-love" aria-label="🔥 34 personnes ont réagi">🔥 <span>34</span></button>
+        </div>
+        <footer class="pp-card__footer">
+          <div class="pp-card__author">
+            <div class="pp-card__avatar" aria-hidden="true">A</div>
+            <span>Anonyme</span>
+          </div>
+          <time datetime="2025-01-14T18:00">il y a 5 heures</time>
+        </footer>
+      </article>
+
+      {{-- ─── Carte 3 ─────────────────────────────────────── --}}
+      <article class="pp-card fade-up fade-up-d2" id="card-3" role="listitem" aria-label="Anecdote — TP informatique">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="pp-card__tag pp-card__tag--purple">💻 Informatique</span>
+        </div>
+        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+        <p class="pp-card__body">
+          Pendant le TP de programmation, j'ai passé 2h à déboguer mon code en C.
+          Mon voisin a jeté un œil et m'a dit : "Bro, t'as oublié un point-virgule ligne 3."
+          2 heures. Un point-virgule. Le prof nous a rendu les notes la semaine d'après :
+          j'ai eu 14 et mon voisin 6. La vie est injuste. 💀
+        </p>
+        <div class="pp-card__reactions" aria-label="Réactions">
+          <button class="pp-reaction" id="card-3-like" aria-label="😂 121 personnes ont trouvé ça drôle">😂 <span>121</span></button>
+          <button class="pp-reaction" id="card-3-relatable" aria-label="😭 56 personnes se sont identifiées">😭 <span>56</span></button>
+        </div>
+        <footer class="pp-card__footer">
+          <div class="pp-card__author">
+            <div class="pp-card__avatar" aria-hidden="true">A</div>
+            <span>Anonyme</span>
+          </div>
+          <time datetime="2025-01-14T08:00">il y a 1 jour</time>
+        </footer>
+      </article>
+
+      {{-- ─── Carte 4 ─────────────────────────────────────── --}}
+      <article class="pp-card fade-up fade-up-d3" id="card-4" role="listitem" aria-label="Anecdote — Soutenance">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="pp-card__tag pp-card__tag--green">🎤 Soutenance</span>
+        </div>
+        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+        <p class="pp-card__body">
+          Pendant ma soutenance de mini-projet, le vidéoprojecteur a rendu l'âme pile
+          au moment où j'allais montrer les résultats. Le jury m'a demandé de décrire
+          les graphes à l'oral. J'ai tout inventé avec un aplomb absolu.
+          Le président du jury a dit "Très bien argumenté". J'ai eu 17/20. 🤷
+        </p>
+        <div class="pp-card__reactions" aria-label="Réactions">
+          <button class="pp-reaction" id="card-4-like" aria-label="😂 203 personnes ont trouvé ça drôle">😂 <span>203</span></button>
+          <button class="pp-reaction" id="card-4-fire" aria-label="🏆 98 impressionnés">🏆 <span>98</span></button>
+        </div>
+        <footer class="pp-card__footer">
+          <div class="pp-card__author">
+            <div class="pp-card__avatar" aria-hidden="true">A</div>
+            <span>Anonyme</span>
+          </div>
+          <time datetime="2025-01-13T14:00">il y a 2 jours</time>
+        </footer>
+      </article>
+
+    </div>
+
+    {{-- Bouton "Voir plus" --}}
+    <div style="text-align:center;margin-top:2.5rem;">
+      <a href="/messages" class="pp-btn pp-btn--blue" id="feed-voir-plus">
+        📚 Voir toutes les anecdotes
+      </a>
+    </div>
+
+  </section>
+
+
+  {{-- ╔══════════════════════════════════════════════════════╗
+       ║   SECTION "COMMENT ÇA MARCHE ?"                     ║
+       ╚══════════════════════════════════════════════════════╝ --}}
+  <section class="pp-how" id="comment" aria-labelledby="how-title">
+
+    <header class="pp-section-header">
+      <span class="pp-section-eyebrow">🛠️ Simple comme bonjour</span>
+      <h2 class="pp-section-title" id="how-title">Comment ça marche ?</h2>
+      <p class="pp-section-subtitle">Partager une anecdote ne prend que 30 secondes</p>
+    </header>
+
+    <div class="pp-steps" role="list" aria-label="Étapes pour publier">
+
+      <div class="pp-step fade-up" id="step-1" role="listitem">
+        <div class="pp-step__num" aria-hidden="true">1</div>
+        <h3 class="pp-step__title">Écris ton anecdote</h3>
+        <p class="pp-step__desc">
+          Raconte ce moment mémorable, drôle ou épique vécu à l'ENSPY.
+          Pas besoin de créer un compte.
+        </p>
+      </div>
+
+      <div class="pp-step fade-up fade-up-d1" id="step-2" role="listitem">
+        <div class="pp-step__num" aria-hidden="true">2</div>
+        <h3 class="pp-step__title">Publie anonymement</h3>
+        <p class="pp-step__desc">
+          Ton identité n'est jamais stockée. Le message est soumis à la
+          modération légère de l'équipe PolyPress.
+        </p>
+      </div>
+
+      <div class="pp-step fade-up fade-up-d2" id="step-3" role="listitem">
+        <div class="pp-step__num" aria-hidden="true">3</div>
+        <h3 class="pp-step__title">La communauté réagit</h3>
+        <p class="pp-step__desc">
+          Ton anecdote rejoint le feed. Les Pipo lisent, réagissent
+          et se reconnaissent dans ta pipo life. 🎉
+        </p>
+      </div>
+
+    </div>
+
+  </section>
+
+
+  {{-- ╔══════════════════════════════════════════════════════╗
+       ║   SECTION CTA FINAL                                 ║
+       ╚══════════════════════════════════════════════════════╝ --}}
+  <section class="pp-cta" id="publier" aria-labelledby="cta-title">
+    <div class="pp-cta__inner">
+      <h2 id="cta-title">Prêt à te confesser ?</h2>
+      <span class="pp-cta__slogan">Pipo life, Pipo news</span>
+      <p>
+        Ta prochaine anecdote attend d'être lue par toute la communauté polyenne.
+        Aucune trace, aucun regret. Juste une bonne histoire.
+      </p>
+      <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="cta-final-btn">
+        ✍️ Raconter une anecdote maintenant
+      </a>
+    </div>
+  </section>
+
+@end

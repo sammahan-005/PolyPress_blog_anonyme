@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {{-- SEO --}}
+    <title>PolyPress — Pipo life, Pipo news · Le club journal de l'ENSPY</title>
+    <meta name="description" content="PolyPress, la plateforme de publication anonyme du club journal de l'ENSPY. Partage tes anecdotes de vie poly en toute discrétion." />
+    <meta name="theme-color" content="#0f2d5a" />
+
+    {{-- Open Graph --}}
+    <meta property="og:title" content="PolyPress — Pipo life, Pipo news" />
+    <meta property="og:description" content="Partage tes anecdotes de vie poly en toute discrétion. Le club journal de l'ENSPY." />
+    <meta property="og:type" content="website" />
+
+    {{-- Favicon (emoji provisoire) --}}
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐦</text></svg>" />
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @stack('dumper')
+  </head>
+  <body>
+
+    {{-- ╔══════════════════════════════════════╗
+         ║            NAVBAR                    ║
+         ╚══════════════════════════════════════╝ --}}
+    <nav class="pp-navbar" role="navigation" aria-label="Navigation principale">
+      <div class="pp-navbar__inner">
+
+        {{-- Marque / Logo --}}
+        <a href="/" class="pp-navbar__brand" aria-label="PolyPress — Accueil">
+          {{-- Colibri origami SVG minimaliste --}}
+          <img src="/public/images/logo.jpeg" alt="PolyPress" class="pp-navbar__logo" width="28" height="28"/>
+          PolyPress
+        </a>
+
+        {{-- Liens de nav (desktop) --}}
+        <ul class="pp-navbar__links" id="pp-nav-links" role="list">
+          <li><a href="/messages" id="nav-feed">Anecdotes</a></li>
+          <li><a href="#comment" id="nav-comment">Comment ça marche</a></li>
+          <li><a href="#contact" id="nav-contact">Contact</a></li>
+        </ul>
+
+        {{-- CTA navbar --}}
+        <a href="/messages/create" class="pp-btn pp-btn--outline pp-navbar__cta" id="nav-cta-btn">
+          ✍️ Se confesser
+        </a>
+
+        {{-- Bouton hamburger (mobile) --}}
+        <button class="pp-navbar__toggle" id="pp-hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="pp-nav-links">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+
+      </div>
+    </nav>
+
+    {{-- Contenu de la page --}}
+    <main>
+      @include('partials/flash_alerts')
+      {{{ await $slots.main() }}}
+    </main>
+
+    {{-- ╔══════════════════════════════════════╗
+         ║            FOOTER                    ║
+         ╚══════════════════════════════════════╝ --}}
+    <footer class="pp-footer" id="contact">
+      <div class="pp-footer__inner">
+
+        {{-- Col 1 : Marque --}}
+        <div class="pp-footer__brand">
+          <div class="pp-footer__brand-name">PolyPress<span style="color:var(--orange)">.</span></div>
+          <p class="pp-footer__tagline">
+            Propulsé par <strong style="color:#fff">PolyPress</strong> — le Club Journal de l'ENSPY.<br/>
+            Tes anecdotes, ton anonymat, notre mission.
+          </p>
+          <div class="pp-footer__socials" role="list" aria-label="Réseaux sociaux">
+            <a href="#" class="pp-social-link" role="listitem" aria-label="Instagram" id="footer-instagram">
+              {{-- Instagram SVG --}}
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a href="#" class="pp-social-link" role="listitem" aria-label="Facebook" id="footer-facebook">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+            </a>
+            <a href="#" class="pp-social-link" role="listitem" aria-label="Twitter / X" id="footer-twitter">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+            </a>
+            <a href="#" class="pp-social-link" role="listitem" aria-label="WhatsApp" id="footer-whatsapp">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        {{-- Col 2 : Liens rapides --}}
+        <div class="pp-footer__col">
+          <h5>Navigation</h5>
+          <ul class="pp-footer__links">
+            <li><a href="/messages" id="footer-link-feed">Dernières anecdotes</a></li>
+            <li><a href="#comment" id="footer-link-comment">Comment ça marche</a></li>
+            <li><a href="/messages/create" id="footer-link-publier">Publier une anecdote</a></li>
+            {{--  <li><a href="#" id="footer-link-archives">Archives</a></li>  --}}
+          </ul>
+        </div>
+
+        {{-- Col 3 : Légal --}}
+        {{--  <div class="pp-footer__col">
+          <h5>Légal & Club</h5>
+          <ul class="pp-footer__links">
+            <li><a href="#" id="footer-link-about">À propos de PolyPress</a></li>
+            <li><a href="#" id="footer-link-privacy">Politique de confidentialité</a></li>
+            <li><a href="#" id="footer-link-terms">Conditions d'utilisation</a></li>
+            <li><a href="#" id="footer-link-contact">Contacter le club</a></li>
+          </ul>
+        </div>  --}}
+
+      </div>
+
+      {{-- Copyright --}}
+      <div class="pp-footer__bottom">
+        <span>© 2026 PolyPress — Le Club Journal de l'ENSPY. Tous droits réservés.</span>
+        <span>Fait avec ❤️ &amp; ☕ par des Pipo passionnés</span>
+      </div>
+    </footer>
+
+    {{-- Script : hamburger menu --}}
+    <script>
+      (function () {
+        const btn   = document.getElementById('pp-hamburger');
+        const links = document.getElementById('pp-nav-links');
+        if (!btn || !links) return;
+        btn.addEventListener('click', function () {
+          const open = links.classList.toggle('is-open');
+          btn.setAttribute('aria-expanded', String(open));
+        });
+        // Fermer le menu en cliquant sur un lien
+        links.querySelectorAll('a').forEach(function (a) {
+          a.addEventListener('click', function () {
+            links.classList.remove('is-open');
+            btn.setAttribute('aria-expanded', 'false');
+          });
+        });
+      })();
+    </script>
+
+  </body>
+</html>

@@ -1,0 +1,44 @@
+@layout()
+
+  <section class="pp-feed" style="padding-top: 5rem; min-height: 80vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+    
+    <header class="pp-section-header" style="margin-bottom: 2rem;">
+      <span class="pp-section-eyebrow">🤫 Exprime-toi en secret</span>
+      <h1 class="pp-section-title">Nouveau Message Anonyme</h1>
+      <p class="pp-section-subtitle">Raconte ce qu'il se passe à Polytech sans aucune crainte, aucun compte requis.</p>
+    </header>
+
+    {{-- Formulaire pour publier --}}
+    <div style="width: 100%; max-width: 600px; background: var(--white); padding: 2.5rem 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-md);" class="fade-up">
+      <form action="{{ route('messages.store') }}" method="POST">
+        {{ csrfField() }}
+        
+        <div style="margin-bottom: 1.5rem;">
+          <label for="content" style="display: block; font-weight: 600; color: var(--blue-dark); margin-bottom: 0.5rem; font-size: 0.95rem;">
+            Ton anecdote, secret ou coup de gueule :
+          </label>
+          <textarea 
+            id="content"
+            name="content" 
+            placeholder="J'ai confondu la salle d'examen de..." 
+            required 
+            style="width: 100%; min-height: 180px; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem; resize: vertical; outline: none; transition: border-color 0.2s;"
+            onfocus="this.style.borderColor='var(--blue-main)'" 
+            onblur="this.style.borderColor='var(--border)'"
+          ></textarea>
+        </div>
+
+        <div style="display: flex; gap: 1rem; align-items: center;">
+          <a href="{{ route('messages.index') }}" class="pp-btn" style="background: rgba(0,0,0,0.05); color: var(--text-muted); justify-content: center; flex: 1;">
+            ❌ Annuler
+          </a>
+          <button type="submit" class="pp-btn pp-btn--primary" style="border: none; justify-content: center; flex: 2; font-size: 0.95rem;">
+            🚀 Publier anonymement
+          </button>
+        </div>
+      </form>
+    </div>
+
+  </section>
+
+@end
