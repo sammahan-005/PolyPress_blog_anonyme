@@ -6,7 +6,7 @@
 
 Bienvenue sur **PolyPress**, la plateforme d'expression 100 % anonyme dédiée à la communauté de l'**ENSPY** (École Nationale Supérieure Polytechnique de Yaoundé). 
 
-Ici, ce qui se passe à Polytech reste sur PolyPress ! C'est l'espace idéal pour partager vos anecdotes, vos confessions, vos coups de cœur ou vos coups de gueule de la vie quotidienne de Polyen, en toute liberté et en toute sécurité.
+Ici, ce qui se passe à Polytech reste sur PolyPress ! C'est l'espace idéal pour partager vos anecdotes, vos confessions, vos coups de cœur ou vos coups de gueule de la vie quotidienne de Pipo, en toute liberté et en toute sécurité.
 
 ---
 

@@ -22,6 +22,7 @@ export default defineConfig({
       ignored: ['**/storage/**', '**/tmp/**'],
     },
     port: 3000,
-    host:'0.0.0.0'
+    host:'0.0.0.0',
+    allowedHosts: ['untold-semicolon-boss.ngrok-free.dev']
   },
 })

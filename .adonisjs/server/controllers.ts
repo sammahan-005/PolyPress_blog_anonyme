@@ -8,4 +8,5 @@ export const controllers = {
   NewAccount: () => import('#controllers/new_account_controller'),
   Reactions: () => import('#controllers/reactions_controller'),
   Session: () => import('#controllers/session_controller'),
+  Admin: () => import('#controllers/admin_controller'),
 }

@@ -8,7 +8,7 @@ import { BaseModel, column } from '@adonisjs/lucid/orm'
 import { DateTime } from 'luxon'
 
 export class MessageSchema extends BaseModel {
-  static $columns = ['content', 'createdAt', 'id', 'updatedAt'] as const
+  static $columns = ['content', 'createdAt', 'id', 'isActive', 'updatedAt'] as const
   $columns = MessageSchema.$columns
   @column()
   declare content: string
@@ -16,6 +16,8 @@ export class MessageSchema extends BaseModel {
   declare createdAt: DateTime
   @column({ isPrimary: true })
   declare id: number
+  @column()
+  declare isActive: boolean
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   declare updatedAt: DateTime | null
 }

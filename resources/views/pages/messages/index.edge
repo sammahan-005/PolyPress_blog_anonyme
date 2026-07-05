@@ -47,6 +47,9 @@
             <button class="pp-reaction {{ visitorReaction?.type === 'fire' ? 'pp-reaction--active' : '' }}" data-type="fire" aria-label="Feu">
               🔥 <span>{{ fireCount }}</span>
             </button>
+            <button class="pp-share-btn" data-url="{{ route('messages.show', [message.id]) }}" data-text="{{ message.content.substring(0, 120) }}{{ message.content.length > 120 ? '...' : '' }}" aria-label="Partager cette anecdote">
+              🔗 <span>Partager</span>
+            </button>
           </div>
 
           <footer class="pp-card__footer">

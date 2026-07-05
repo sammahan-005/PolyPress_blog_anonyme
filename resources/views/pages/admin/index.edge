@@ -1,0 +1,132 @@
+@adminLayout({ title: 'Administration · PolyPress' })
+
+  <div class="pp-admin">
+    {{-- Header --}}
+    <header class="pp-admin__header">
+      <div>
+        <h1 class="pp-admin__title">Console de Modération</h1>
+        <p style="color: var(--text-muted);">Gérez les anecdotes et assurez le respect de la charte de la communauté ENSPY.</p>
+      </div>
+      <div>
+        <a href="/" class="pp-btn pp-btn--outline">
+          🏠 Retour à l'accueil
+        </a>
+      </div>
+    </header>
+
+    {{-- Stats Cards --}}
+    <div class="pp-admin__stats-grid">
+      <div class="pp-admin__stat-card">
+        <span class="pp-admin__stat-val">{{ stats.total }}</span>
+        <span class="pp-admin__stat-lbl">Anecdotes totales</span>
+      </div>
+      <div class="pp-admin__stat-card">
+        <span class="pp-admin__stat-val" style="color: #10b981;">{{ stats.active }}</span>
+        <span class="pp-admin__stat-lbl">Anecdotes actives</span>
+      </div>
+      <div class="pp-admin__stat-card">
+        <span class="pp-admin__stat-val" style="color: #ef4444;">{{ stats.inactive }}</span>
+        <span class="pp-admin__stat-lbl">Anecdotes désactivées</span>
+      </div>
+      <div class="pp-admin__stat-card">
+        <span class="pp-admin__stat-val" style="color: var(--orange);">{{ stats.disliked }}</span>
+        <span class="pp-admin__stat-lbl">Anecdotes dislikées</span>
+      </div>
+    </div>
+
+    {{-- Filter Tabs --}}
+    <div class="pp-admin__tabs">
+      <a href="{{ route('admin.index', {}, { qs: { filter: 'all' } }) }}" class="pp-admin__tab {{ filter === 'all' ? 'is-active' : '' }}">
+        Tous les messages ({{ stats.total }})
+      </a>
+      <a href="{{ route('admin.index', {}, { qs: { filter: 'disliked' } }) }}" class="pp-admin__tab {{ filter === 'disliked' ? 'is-active' : '' }}">
+        Messages dislikés ({{ stats.disliked }})
+      </a>
+    </div>
+
+    {{-- Messages List --}}
+    <div class="pp-admin__list">
+      @each(message in messages)
+        <article class="pp-admin__item">
+          {{-- Meta details --}}
+          <div class="pp-admin__item-meta">
+            <div>
+              <span class="pp-admin__item-id">#{{ message.id }}</span>
+              <span style="margin: 0 0.5rem; color: var(--border);">•</span>
+              <span>Publié {{ message.createdAt.toRelative() }} ({{ message.createdAt.toFormat('dd/MM/yyyy HH:mm') }})</span>
+            </div>
+            <div>
+              @if(message.isActive)
+                <span class="pp-badge-status pp-badge-status--active">En ligne</span>
+              @else
+                <span class="pp-badge-status pp-badge-status--inactive">Désactivé</span>
+              @endif
+            </div>
+          </div>
+
+          {{-- Content --}}
+          <div class="pp-admin__item-content">
+            {{ message.content }}
+          </div>
+
+          {{-- Footer with reactions and moderation buttons --}}
+          <div class="pp-admin__item-footer">
+            {{-- Reactions list --}}
+            <div class="pp-admin__item-reactions">
+              @let(likes = message.reactions.filter(r => r.type === 'like').length)
+              @let(dislikes = message.reactions.filter(r => r.type === 'dislike').length)
+              @let(laughs = message.reactions.filter(r => r.type === 'laugh').length)
+              @let(loves = message.reactions.filter(r => r.type === 'love').length)
+              @let(fires = message.reactions.filter(r => r.type === 'fire').length)
+
+              <span class="pp-admin__mini-reaction {{ likes > 0 ? 'has-count' : '' }}">
+                👍 <span>{{ likes }}</span>
+              </span>
+              <span class="pp-admin__mini-reaction {{ dislikes > 0 ? 'has-dislike-count' : '' }}">
+                👎 <span>{{ dislikes }}</span>
+              </span>
+              <span class="pp-admin__mini-reaction {{ laughs > 0 ? 'has-count' : '' }}">
+                😂 <span>{{ laughs }}</span>
+              </span>
+              <span class="pp-admin__mini-reaction {{ loves > 0 ? 'has-count' : '' }}">
+                ❤️ <span>{{ loves }}</span>
+              </span>
+              <span class="pp-admin__mini-reaction {{ fires > 0 ? 'has-count' : '' }}">
+                🔥 <span>{{ fires }}</span>
+              </span>
+            </div>
+
+            {{-- Actions --}}
+            <div class="pp-admin__actions">
+              {{-- Toggle Active status --}}
+              @form({ route: 'admin.messages.toggleActive', routeParams: { id: message.id }, method: 'POST', style: 'display:inline;' })
+                @if(message.isActive)
+                  <button type="submit" class="pp-btn pp-btn--warning" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+                    🛑 Désactiver
+                  </button>
+                @else
+                  <button type="submit" class="pp-btn pp-btn--success" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+                    ✅ Activer
+                  </button>
+                @endif
+              @end
+
+              {{-- Delete Message --}}
+              @form({ route: 'admin.messages.delete', routeParams: { id: message.id }, method: 'POST', style: 'display:inline;', onsubmit: "return confirm('Êtes-vous sûr de vouloir supprimer définitivement cette anecdote ? Cette action est irréversible.')" })
+                <button type="submit" class="pp-btn pp-btn--danger" style="font-size: 0.8rem; padding: 0.4rem 1rem;">
+                  🗑️ Supprimer
+                </button>
+              @end
+            </div>
+          </div>
+        </article>
+      @else
+        <div style="text-align: center; padding: 4rem 2rem; background: var(--bg-card); border-radius: var(--radius); border: 1px solid var(--border); color: var(--text-light);">
+          <p style="font-size: 1.2rem; font-weight: 600; color: var(--blue-dark); margin-bottom: 0.5rem;">Aucun message trouvé</p>
+          <p>Aucune anecdote ne correspond au filtre actuel.</p>
+        </div>
+      @end
+    </div>
+  </div>
+
+@end

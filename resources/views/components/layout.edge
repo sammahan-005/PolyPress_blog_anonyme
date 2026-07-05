@@ -5,17 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     {{-- SEO --}}
-    <title>PolyPress — Pipo life, Pipo news · Le club journal de l'ENSPY</title>
-    <meta name="description" content="PolyPress, la plateforme de publication anonyme du club journal de l'ENSPY. Partage tes anecdotes de vie poly en toute discrétion." />
+    <title>{{{ title || 'PolyPress — Pipo life, Pipo news · Le club journal de l\'ENSPY' }}}</title>
+    <meta name="description" content="{{ description || 'PolyPress, la plateforme de publication anonyme du club journal de l\'ENSPY. Partage tes anecdotes de vie poly en toute discrétion.' }}" />
     <meta name="theme-color" content="#0f2d5a" />
 
     {{-- Open Graph --}}
-    <meta property="og:title" content="PolyPress — Pipo life, Pipo news" />
-    <meta property="og:description" content="Partage tes anecdotes de vie poly en toute discrétion. Le club journal de l'ENSPY." />
+    <meta property="og:title" content="{{ title || 'PolyPress — Pipo life, Pipo news' }}" />
+    <meta property="og:description" content="{{ description || 'Partage tes anecdotes de vie poly en toute discrétion. Le club journal de l\'ENSPY.' }}" />
+    <meta property="og:image" content="/public/images/logo.jpeg" />
     <meta property="og:type" content="website" />
 
     {{-- Favicon (emoji provisoire) --}}
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐦</text></svg>" />
+    <link rel="icon" href="/public/favicon.ico" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('dumper')
@@ -38,14 +39,30 @@
         {{-- Liens de nav (desktop) --}}
         <ul class="pp-navbar__links" id="pp-nav-links" role="list">
           <li><a href="/messages" id="nav-feed">Anecdotes</a></li>
+          @if(auth.user)
+            <li><a href="/admin" id="nav-admin" style="color: var(--orange); font-weight: 700;">Console Admin</a></li>
+          @endif
           <li><a href="#comment" id="nav-comment">Comment ça marche</a></li>
           <li><a href="#contact" id="nav-contact">Contact</a></li>
         </ul>
 
-        {{-- CTA navbar --}}
-        <a href="/messages/create" class="pp-btn pp-btn--outline pp-navbar__cta" id="nav-cta-btn">
-          ✍️ Se confesser
-        </a>
+        {{-- CTA navbar / User profile --}}
+        <div class="pp-navbar__actions-container" style="display: flex; align-items: center; gap: 0.75rem;">
+          <a href="/messages/create" class="pp-btn pp-btn--outline pp-navbar__cta" id="nav-cta-btn">
+            ✍️ Se confesser
+          </a>
+
+          @if(auth.user)
+            <div class="pp-navbar__user" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; font-weight: 600;">
+              @!avatar({ initials: auth.user.initials })
+            </div>
+            @form({ route: 'session.destroy', method: 'POST', style: 'display: inline;' })
+              <button type="submit" class="pp-btn pp-btn--outline" style="border-color: var(--text-muted); color: var(--text-muted); padding: 0.4rem 1rem; font-size: 0.8rem;" id="nav-logout-btn">
+                Déconnexion
+              </button>
+            @end
+          @endif
+        </div>
 
         {{-- Bouton hamburger (mobile) --}}
         <button class="pp-navbar__toggle" id="pp-hamburger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="pp-nav-links">
@@ -124,25 +141,132 @@
       </div>
     </footer>
 
-    {{-- Script : hamburger menu --}}
+    {{-- Toast Notification --}}
+    <div id="pp-toast-notification" class="pp-toast" aria-live="polite">
+      <span>📋</span> <span id="pp-toast-text">Lien copié dans le presse-papiers !</span>
+    </div>
+
+    {{-- Script : partage et hamburger menu --}}
     <script>
       (function () {
+        // Menu Hamburger
         const btn   = document.getElementById('pp-hamburger');
         const links = document.getElementById('pp-nav-links');
-        if (!btn || !links) return;
-        btn.addEventListener('click', function () {
-          const open = links.classList.toggle('is-open');
-          btn.setAttribute('aria-expanded', String(open));
-        });
-        // Fermer le menu en cliquant sur un lien
-        links.querySelectorAll('a').forEach(function (a) {
-          a.addEventListener('click', function () {
-            links.classList.remove('is-open');
-            btn.setAttribute('aria-expanded', 'false');
+        if (btn && links) {
+          btn.addEventListener('click', function () {
+            const open = links.classList.toggle('is-open');
+            btn.setAttribute('aria-expanded', String(open));
           });
+          links.querySelectorAll('a').forEach(function (a) {
+            a.addEventListener('click', function () {
+              links.classList.remove('is-open');
+              btn.setAttribute('aria-expanded', 'false');
+            });
+          });
+        }
+
+        // Système de partage global
+        const toast = document.getElementById('pp-toast-notification');
+        const toastText = document.getElementById('pp-toast-text');
+
+        function showToast(message) {
+          if (!toast) return;
+          toastText.textContent = message;
+          toast.classList.add('pp-toast--show');
+          setTimeout(() => {
+            toast.classList.remove('pp-toast--show');
+          }, 3000);
+        }
+
+        // Fallback de copie pour les contextes non-sécurisés (HTTP / IP locale) ou vieux iOS
+        function copyToClipboardFallback(text) {
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          
+          // Rendre l'élément invisible et hors écran
+          textArea.style.position = "fixed";
+          textArea.style.top = "0";
+          textArea.style.left = "0";
+          textArea.style.width = "2em";
+          textArea.style.height = "2em";
+          textArea.style.padding = "0";
+          textArea.style.border = "none";
+          textArea.style.outline = "none";
+          textArea.style.boxShadow = "none";
+          textArea.style.background = "transparent";
+          textArea.style.opacity = "0";
+
+          document.body.appendChild(textArea);
+          textArea.focus();
+          textArea.select();
+
+          // Support spécifique iOS pour la sélection de texte
+          if (navigator.userAgent.match(/ipad|iphone/i)) {
+            const range = document.createRange();
+            range.selectNodeContents(textArea);
+            const selection = window.getSelection();
+            selection.removeAllRanges();
+            selection.addRange(range);
+            textArea.setSelectionRange(0, 999999);
+          }
+
+          try {
+            const successful = document.execCommand('copy');
+            document.body.removeChild(textArea);
+            return successful;
+          } catch (err) {
+            console.error('Fallback copy failed:', err);
+            document.body.removeChild(textArea);
+            return false;
+          }
+        }
+
+        document.addEventListener('click', async function (e) {
+          const shareBtn = e.target.closest('.pp-share-btn');
+          if (!shareBtn) return;
+
+          e.preventDefault();
+          const relativeUrl = shareBtn.getAttribute('data-url');
+          const text = shareBtn.getAttribute('data-text') || 'Regarde cette confession sur PolyPress !';
+          const absoluteUrl = window.location.origin + relativeUrl;
+
+          // 1. Essai de l'API Share native (HTTPS seulement sur mobile)
+          if (navigator.share) {
+            try {
+              await navigator.share({
+                title: 'PolyPress',
+                text: text,
+                url: absoluteUrl
+              });
+              return;
+            } catch (err) {
+              // Si l'utilisateur a annulé, on ne fait rien de plus
+              if (err.name === 'AbortError') {
+                return;
+              }
+              console.warn('navigator.share a échoué:', err);
+            }
+          }
+
+          // 2. Essai de l'API Clipboard moderne (HTTPS/Localhost uniquement)
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            try {
+              await navigator.clipboard.writeText(absoluteUrl);
+              showToast('Lien de l\'anecdote copié ! 📋');
+              return;
+            } catch (err) {
+              console.warn('navigator.clipboard a échoué:', err);
+            }
+          }
+
+          // 3. Fallback ultime pour HTTP, IP locale et anciens appareils iOS
+          if (copyToClipboardFallback(absoluteUrl)) {
+            showToast('Lien de l\'anecdote copié ! 📋');
+          } else {
+            showToast('Erreur lors de la copie du lien ❌');
+          }
         });
       })();
     </script>
-
   </body>
 </html>

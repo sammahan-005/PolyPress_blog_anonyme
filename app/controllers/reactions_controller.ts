@@ -50,19 +50,24 @@ export default class ReactionsController {
       action = 'updated'
     }
 
-    // Récupérer les nouveaux comptes de réactions pour ce message
-    const reactions = await Reaction.query().where('messageId', messageId)
+    // Récupérer les nouveaux comptes de réactions pour ce message via agrégation SQL
+    const reactionsCounts = await Reaction.query()
+      .where('messageId', messageId)
+      .groupBy('type')
+      .select('type')
+      .count('* as total')
 
     const counts = allowedTypes.reduce(
       (acc, currentType) => {
-        acc[currentType] = reactions.filter((r) => r.type === currentType).length
+        const match = reactionsCounts.find((r) => r.type === currentType)
+        acc[currentType] = match ? Number(match.$extras.total || 0) : 0
         return acc
       },
       {} as Record<string, number>
     )
 
-    // Trouver l'état actuel de la réaction de ce visiteur
-    const userReaction = reactions.find((r) => r.visitorToken === visitorToken)?.type || null
+    // Trouver l'état actuel de la réaction de ce visiteur (déterminé par l'action courante)
+    const userReaction = action === 'removed' ? null : type
 
     return response.ok({
       action,

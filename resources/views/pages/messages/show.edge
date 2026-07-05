@@ -1,0 +1,120 @@
+@layout({ 
+  title: 'Anecdote #' + message.id + ' · PolyPress', 
+  description: message.content.substring(0, 150) + (message.content.length > 150 ? '...' : '') 
+})
+
+  <section class="pp-feed" style="padding-top: 5rem; padding-bottom: 5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
+    
+    {{-- Bouton Retour --}}
+    <div style="margin-bottom: 2rem; align-self: center;">
+      <a href="{{ route('messages.index') }}" class="pp-btn pp-btn--outline" style="font-size: 0.95rem; padding: 0.6rem 1.4rem; display: inline-flex; align-items: center; gap: 0.5rem;">
+        👈 Retour aux anecdotes
+      </a>
+    </div>
+
+    {{-- Carte d'anecdote unique --}}
+    <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem;">
+      <article class="pp-card fade-up" id="card-{{ message.id }}" role="article" style="min-height: auto;">
+        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+        <p class="pp-card__body" style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
+          {{ message.content }}
+        </p>
+        
+        @let(visitorReaction = message.reactions.find(r => r.visitorToken === visitorToken))
+        
+        <div class="pp-card__reactions" aria-label="Réactions" data-message-id="{{ message.id }}" style="display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 0.5rem;">
+          @let(likeCount = message.reactions.filter(r => r.type === 'like').length)
+          @let(dislikeCount = message.reactions.filter(r => r.type === 'dislike').length)
+          @let(laughCount = message.reactions.filter(r => r.type === 'laugh').length)
+          @let(loveCount = message.reactions.filter(r => r.type === 'love').length)
+          @let(fireCount = message.reactions.filter(r => r.type === 'fire').length)
+
+          <button class="pp-reaction {{ visitorReaction?.type === 'like' ? 'pp-reaction--active' : '' }}" data-type="like" aria-label="Like">
+            👍 <span>{{ likeCount }}</span>
+          </button>
+          <button class="pp-reaction {{ visitorReaction?.type === 'dislike' ? 'pp-reaction--active' : '' }}" data-type="dislike" aria-label="Dislike">
+            👎 <span>{{ dislikeCount }}</span>
+          </button>
+          <button class="pp-reaction {{ visitorReaction?.type === 'laugh' ? 'pp-reaction--active' : '' }}" data-type="laugh" aria-label="Rire">
+            😂 <span>{{ laughCount }}</span>
+          </button>
+          <button class="pp-reaction {{ visitorReaction?.type === 'love' ? 'pp-reaction--active' : '' }}" data-type="love" aria-label="Adorer">
+            ❤️ <span>{{ loveCount }}</span>
+          </button>
+          <button class="pp-reaction {{ visitorReaction?.type === 'fire' ? 'pp-reaction--active' : '' }}" data-type="fire" aria-label="Feu">
+            🔥 <span>{{ fireCount }}</span>
+          </button>
+          <button class="pp-share-btn" data-url="{{ route('messages.show', [message.id]) }}" data-text="{{ message.content.substring(0, 120) }}{{ message.content.length > 120 ? '...' : '' }}" aria-label="Partager cette anecdote">
+            🔗 <span>Partager</span>
+          </button>
+        </div>
+
+        <footer class="pp-card__footer">
+          <div class="pp-card__author">
+            <div class="pp-card__avatar" aria-hidden="true">A</div>
+            <span>Anonyme</span>
+          </div>
+          <time datetime="{{ message.createdAt.toISO() }}">{{ message.createdAt.toRelative() }}</time>
+        </footer>
+      </article>
+    </div>
+
+  </section>
+
+  {{-- Script de gestion des réactions en AJAX --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.querySelector('.pp-card__reactions');
+      if (!container) return;
+      
+      const messageId = container.dataset.messageId;
+      const buttons = container.querySelectorAll('.pp-reaction');
+      
+      buttons.forEach(button => {
+        button.addEventListener('click', async (e) => {
+          e.preventDefault();
+          const type = button.dataset.type;
+          
+          try {
+            const response = await fetch(`/messages/${messageId}/react`, {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json',
+                'x-csrf-token': '{{ csrfToken }}'
+              },
+              body: JSON.stringify({ type })
+            });
+            
+            if (!response.ok) {
+              throw new Error('Erreur réseau lors de la réaction');
+            }
+            
+            const data = await response.json();
+            
+            // Mettre à jour l'état de tous les boutons de cette carte
+            buttons.forEach(btn => {
+              const btnType = btn.dataset.type;
+              const countSpan = btn.querySelector('span');
+              
+              // Mettre à jour le compteur
+              if (countSpan && data.counts[btnType] !== undefined) {
+                countSpan.textContent = data.counts[btnType];
+              }
+              
+              // Activer / Désactiver la classe active
+              if (data.userReaction === btnType) {
+                btn.classList.add('pp-reaction--active');
+              } else {
+                btn.classList.remove('pp-reaction--active');
+              }
+            });
+          } catch (error) {
+            console.error('Erreur:', error);
+          }
+        });
+      });
+    });
+  </script>
+
+@end

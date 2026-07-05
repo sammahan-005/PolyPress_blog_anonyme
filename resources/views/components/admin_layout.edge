@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>{{{ title || 'Console Admin · PolyPress' }}}</title>
+    <meta name="theme-color" content="#0f2d5a" />
+
+    <link rel="icon" href="/public/favicon.ico" />
+
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+  </head>
+  <body class="pp-admin-body">
+
+    <div class="pp-admin-layout">
+      {{-- Sidebar (Desktop) --}}
+      <aside class="pp-admin-sidebar" role="navigation" aria-label="Navigation administration">
+        <div class="pp-admin-sidebar__brand">
+          <img src="/public/images/logo.jpeg" alt="PolyPress Logo" class="pp-admin-sidebar__logo" width="32" height="32"/>
+          <div>
+            <div class="pp-admin-sidebar__brand-name">PolyPress</div>
+            <div class="pp-admin-sidebar__brand-sub">Console Admin</div>
+          </div>
+        </div>
+
+        <nav class="pp-admin-sidebar__nav">
+          <ul class="pp-admin-sidebar__links" role="list">
+            <li>
+              <a href="/admin" class="pp-admin-sidebar__link {{ request.url() === '/admin' && !request.input('filter') ? 'is-active' : '' }}">
+                📊 Tableau de bord
+              </a>
+            </li>
+            <li>
+              <a href="/admin?filter=disliked" class="pp-admin-sidebar__link {{ request.input('filter') === 'disliked' ? 'is-active' : '' }}">
+                👎 Messages dislikés
+              </a>
+            </li>
+            <li class="pp-admin-sidebar__separator"></li>
+            <li>
+              <a href="/" class="pp-admin-sidebar__link">
+                🏠 Retour au site public
+              </a>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="pp-admin-sidebar__footer">
+          <div class="pp-admin-sidebar__user">
+            @if(auth.user)
+              @!avatar({ initials: auth.user.initials })
+              <div class="pp-admin-sidebar__user-info">
+                <span class="pp-admin-sidebar__user-name">{{ auth.user.fullName || 'Admin' }}</span>
+                <span class="pp-admin-sidebar__user-role">Modérateur</span>
+              </div>
+            @endif
+          </div>
+          @form({ route: 'session.destroy', method: 'POST', style: 'width: 100%;' })
+            <button type="submit" class="pp-btn pp-btn--outline" style="width: 100%; justify-content: center; font-size: 0.85rem; border-color: rgba(255,255,255,0.2); color: rgba(255,255,255,0.7);">
+              🚪 Déconnexion
+            </button>
+          @end
+        </div>
+      </aside>
+
+      {{-- Mobile Header --}}
+      <header class="pp-admin-mobile-header">
+        <a href="/" class="pp-admin-mobile-header__brand">
+          <img src="/public/images/logo.jpeg" alt="PolyPress Logo" width="24" height="24"/>
+          PolyPress Admin
+        </a>
+        <button class="pp-admin-mobile-header__toggle" id="pp-admin-hamburger" aria-label="Menu" aria-expanded="false">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </header>
+
+      {{-- Main Content Wrap --}}
+      <div class="pp-admin-main">
+        {{-- Topbar (Desktop) --}}
+        <header class="pp-admin-topbar">
+          <div class="pp-admin-topbar__search">
+            <span style="font-weight: 600; color: var(--blue-dark); letter-spacing: -0.3px;">Console de Modération</span>
+          </div>
+          <div class="pp-admin-topbar__actions">
+            <a href="/" class="pp-btn pp-btn--outline" style="font-size: 0.85rem; padding: 0.45rem 1rem;">
+              🏠 Visiter le site
+            </a>
+            <div style="width: 1px; height: 24px; background: var(--border);"></div>
+            <div class="pp-admin-topbar__user" style="display: flex; align-items: center; gap: 0.5rem;">
+              @if(auth.user)
+                @!avatar({ initials: auth.user.initials })
+                <span style="font-size: 0.9rem; font-weight: 600; color: var(--text);">{{ auth.user.fullName || auth.user.email }}</span>
+              @endif
+            </div>
+          </div>
+        </header>
+
+        {{-- Content Body --}}
+        <main class="pp-admin-content">
+          @include('partials/flash_alerts')
+          {{{ await $slots.main() }}}
+        </main>
+      </div>
+    </div>
+
+    {{-- Mobile Nav Drawer --}}
+    <div class="pp-admin-drawer" id="pp-admin-drawer">
+      <div class="pp-admin-drawer__content">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem;">
+          <span style="font-weight:800; color:var(--blue-dark); font-size:1.2rem;">Navigation</span>
+          <button id="pp-admin-drawer-close" style="background:none; border:none; font-size:1.5rem; cursor:pointer;">&times;</button>
+        </div>
+        <ul style="list-style:none; display:flex; flex-direction:column; gap:1.25rem;">
+          <li><a href="/admin" style="font-size:1.1rem; font-weight:600; color:var(--text);">📊 Tableau de bord</a></li>
+          <li><a href="/admin?filter=disliked" style="font-size:1.1rem; font-weight:600; color:var(--text);">👎 Messages dislikés</a></li>
+          <li style="height:1px; background:var(--border); margin:0.5rem 0;"></li>
+          <li><a href="/" style="font-size:1.1rem; font-weight:600; color:var(--text);">🏠 Retour au site</a></li>
+        </ul>
+        <div style="margin-top:auto; padding-top:2rem;">
+          @form({ route: 'session.destroy', method: 'POST' })
+            <button type="submit" class="pp-btn pp-btn--outline" style="width:100%; justify-content:center;">
+              🚪 Déconnexion
+            </button>
+          @end
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function() {
+        const btn = document.getElementById('pp-admin-hamburger');
+        const drawer = document.getElementById('pp-admin-drawer');
+        const closeBtn = document.getElementById('pp-admin-drawer-close');
+
+        if (btn && drawer) {
+          btn.addEventListener('click', () => {
+            drawer.classList.add('is-open');
+            btn.setAttribute('aria-expanded', 'true');
+          });
+        }
+
+        if (closeBtn && drawer) {
+          closeBtn.addEventListener('click', () => {
+            drawer.classList.remove('is-open');
+            if (btn) btn.setAttribute('aria-expanded', 'false');
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>

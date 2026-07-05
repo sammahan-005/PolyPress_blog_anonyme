@@ -31,7 +31,7 @@
 
       <p class="pp-hero__desc fade-up fade-up-d3">
         Partage tes anecdotes, confessions et coups de gueule de la vie à l'ENSPY.
-        Zéro identité révélée, 100 % polyen authentique.
+        Zéro identité révélée, 100 % Pipo authentique.
       </p>
 
       {{-- Boutons d'action --}}
@@ -63,17 +63,17 @@
     <div class="pp-stats__grid">
 
       <div class="pp-stat" id="stat-messages">
-        <div class="pp-stat__number">247</div>
+        <div class="pp-stat__number">{{ stats.messagesCount }}</div>
         <div class="pp-stat__label">Messages publiés</div>
       </div>
 
       <div class="pp-stat" id="stat-users">
-        <div class="pp-stat__number">1 200+</div>
+        <div class="pp-stat__number">{{ stats.visitorsCount }}</div>
         <div class="pp-stat__label">Pipo lecteurs</div>
       </div>
 
       <div class="pp-stat" id="stat-reactions">
-        <div class="pp-stat__number">4 800</div>
+        <div class="pp-stat__number">{{ stats.reactionsCount }}</div>
         <div class="pp-stat__label">Réactions générées</div>
       </div>
 
@@ -94,7 +94,7 @@
     <header class="pp-section-header">
       <span class="pp-section-eyebrow">📣 Fraîchement confessé</span>
       <h2 class="pp-section-title" id="feed-title">Dernières Anecdotes</h2>
-      <p class="pp-section-subtitle">Les témoignages authentiques de la communauté polyenne</p>
+      <p class="pp-section-subtitle">Les témoignages authentiques de la communauté des Pipo</p>
     </header>
 
     <div class="pp-cards-grid" role="list" aria-label="Fil des anecdotes anonymes">
@@ -264,7 +264,7 @@
       <h2 id="cta-title">Prêt à te confesser ?</h2>
       <span class="pp-cta__slogan">Pipo life, Pipo news</span>
       <p>
-        Ta prochaine anecdote attend d'être lue par toute la communauté polyenne.
+        Ta prochaine anecdote attend d'être lue par toute la communauté des Pipo.
         Aucune trace, aucun regret. Juste une bonne histoire.
       </p>
       <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="cta-final-btn">
