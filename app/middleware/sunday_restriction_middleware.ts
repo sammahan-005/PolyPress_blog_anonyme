@@ -9,7 +9,7 @@ export default class SundayRestrictionMiddleware {
     const now = DateTime.now()
 
     if (now < targetDate) {
-      return ctx.response.redirect().toRoute('messages.waiting' as any)
+      return ctx.response.redirect().toPath('/messages/waiting')
     }
 
     return next()
