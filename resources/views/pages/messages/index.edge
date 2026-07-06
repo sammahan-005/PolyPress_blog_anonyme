@@ -1,5 +1,37 @@
 @layout()
 
+  <style>
+    /* Effet d'apparition au défilement (Scroll Reveal) */
+    .reveal-card {
+      opacity: 0;
+      transform: translateY(35px) scale(0.97);
+      transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  transform 0.8s cubic-bezier(0.16, 1, 0.3, 1), 
+                  box-shadow 0.25s ease;
+      will-change: transform, opacity;
+    }
+    
+    .reveal-card.is-visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+    
+    /* Survol amélioré une fois la carte révélée */
+    .reveal-card.is-visible:hover {
+      transform: translateY(-8px) scale(1.015) !important;
+      box-shadow: var(--shadow-lg) !important;
+    }
+  </style>
+
+  <noscript>
+    <style>
+      .reveal-card {
+        opacity: 1 !important;
+        transform: none !important;
+      }
+    </style>
+  </noscript>
+
   {{-- Page Header --}}
   <section class="pp-feed" style="padding-top: 4rem; padding-bottom: 4rem;">
     <div class="pp-section-header" style="margin-bottom: 2rem;">
@@ -17,7 +49,7 @@
     {{-- Grille des anecdotes --}}
     <div class="pp-cards-grid" role="list" aria-label="Fil des anecdotes anonymes">
       @each(message in messages)
-        <article class="pp-card fade-up" id="card-{{ message.id }}" role="listitem">
+        <article class="pp-card reveal-card" id="card-{{ message.id }}" role="listitem">
           <div class="pp-card__quote-icon" aria-hidden="true">"</div>
           <p class="pp-card__body">
             {{ message.content }}
@@ -78,6 +110,27 @@
   {{-- Script de gestion des réactions en AJAX --}}
   <script>
     document.addEventListener('DOMContentLoaded', () => {
+      // --- Effet de scroll pour révéler les cartes ---
+      const revealCards = document.querySelectorAll('.reveal-card');
+      
+      const revealObserver = new IntersectionObserver((entries, observer) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        root: null,
+        rootMargin: '0px 0px -40px 0px',
+        threshold: 0.05
+      });
+      
+      revealCards.forEach(card => {
+        revealObserver.observe(card);
+      });
+
+      // --- Gestion des réactions ---
       const reactionContainers = document.querySelectorAll('.pp-card__reactions');
       
       reactionContainers.forEach(container => {
