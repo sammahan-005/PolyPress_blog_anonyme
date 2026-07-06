@@ -1,6 +1,7 @@
 import { HttpContext } from '@adonisjs/core/http'
 import Message from '#models/message'
 import Reaction from '#models/reaction'
+import { createMessageValidator } from '#validators/message'
 
 export default class MessagesController {
   async index({ view }: HttpContext) {
@@ -20,14 +21,24 @@ export default class MessagesController {
     return view.render('pages/messages/waiting')
   }
 
-  async store({ request, response }: HttpContext) {
-    const content = request.input('content')
-    if (!content || content.trim().length === 0) {
-      return response.badRequest('Le message ne peut pas être vide')
+  async store({ request, response, session }: HttpContext) {
+    const payload = await request.validateUsing(createMessageValidator)
+
+    // Déduplication : rejeter si un message identique a été soumis dans les 2 dernières minutes
+    const twoMinutesAgo = new Date(Date.now() - 2 * 60 * 1000)
+    const duplicate = await Message.query()
+      .where('content', payload.content)
+      .where('createdAt', '>=', twoMinutesAgo)
+      .first()
+
+    if (duplicate) {
+      session.flash('warning', 'Ce message a déjà été soumis. Merci de patienter.')
+      return response.redirect().toPath('/messages/waiting')
     }
 
-    await Message.create({ content })
-    return response.redirect().toPath('/messages')
+    await Message.create({ content: payload.content })
+    session.flash('success', 'Votre message a bien été soumis.')
+    return response.redirect().toPath('/messages/waiting')
   }
 
   async show({ params, view }: HttpContext) {

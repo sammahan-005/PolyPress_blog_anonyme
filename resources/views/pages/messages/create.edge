@@ -10,7 +10,7 @@
 
     {{-- Formulaire pour publier --}}
     <div style="width: 100%; max-width: 600px; background: var(--white); padding: 2.5rem 2rem; border-radius: var(--radius-lg); border: 1px solid var(--border); box-shadow: var(--shadow-md);" class="fade-up">
-      <form action="{{ route('messages.store') }}" method="POST">
+      <form id="message-form" action="{{ route('messages.store') }}" method="POST">
         {{ csrfField() }}
         
         <div style="margin-bottom: 1.5rem;">
@@ -22,6 +22,7 @@
             name="content" 
             placeholder="J'ai confondu la salle d'examen de..." 
             required 
+            minlength="2"
             style="width: 100%; min-height: 180px; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem; resize: vertical; outline: none; transition: border-color 0.2s;"
             onfocus="this.style.borderColor='var(--blue-main)'" 
             onblur="this.style.borderColor='var(--border)'"
@@ -32,11 +33,21 @@
           <a href="{{ route('messages.index') }}" class="pp-btn" style="background: rgba(0,0,0,0.05); color: var(--text-muted); justify-content: center; flex: 1;">
             ❌ Annuler
           </a>
-          <button type="submit" class="pp-btn pp-btn--primary" style="border: none; justify-content: center; flex: 2; font-size: 0.95rem;">
+          <button id="submit-btn" type="submit" class="pp-btn pp-btn--primary" style="border: none; justify-content: center; flex: 2; font-size: 0.95rem;">
             🚀 Publier anonymement
           </button>
         </div>
       </form>
+
+      <script>
+        document.getElementById('message-form').addEventListener('submit', function () {
+          const btn = document.getElementById('submit-btn')
+          btn.disabled = true
+          btn.textContent = '⏳ Envoi en cours…'
+          btn.style.opacity = '0.6'
+          btn.style.cursor = 'not-allowed'
+        })
+      </script>
     </div>
 
   </section>
