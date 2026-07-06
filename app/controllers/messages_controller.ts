@@ -23,7 +23,7 @@ export default class MessagesController {
     }
 
     await Message.create({ content })
-    return response.redirect().toRoute('messages.index')
+    return response.redirect().toPath('/messages')
   }
 
   async show({ params, view }: HttpContext) {
