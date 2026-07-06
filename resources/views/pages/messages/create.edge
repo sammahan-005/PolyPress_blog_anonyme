@@ -14,8 +14,9 @@
         {{ csrfField() }}
         
         <div style="margin-bottom: 1.5rem;">
-          <label for="content" style="display: block; font-weight: 600; color: var(--blue-dark); margin-bottom: 0.5rem; font-size: 0.95rem;">
-            Ton anecdote, secret ou coup de gueule :
+          <label for="content" style="display: flex; justify-content: space-between; font-weight: 600; color: var(--blue-dark); margin-bottom: 0.5rem; font-size: 0.95rem;">
+            <span>Ton anecdote, secret ou coup de gueule :</span>
+            <span id="char-count" style="font-weight: 500; color: var(--text-light); font-size: 0.85rem;">0 / 2000</span>
           </label>
           <textarea 
             id="content"
@@ -23,10 +24,18 @@
             placeholder="J'ai confondu la salle d'examen de..." 
             required 
             minlength="2"
+            maxlength="2000"
             style="width: 100%; min-height: 180px; padding: 1rem; border-radius: var(--radius); border: 1px solid var(--border); font-family: inherit; font-size: 0.95rem; resize: vertical; outline: none; transition: border-color 0.2s;"
             onfocus="this.style.borderColor='var(--blue-main)'" 
             onblur="this.style.borderColor='var(--border)'"
-          ></textarea>
+          >{{{ old('content') || '' }}}</textarea>
+
+          @let(errors = flashMessages.get('inputErrorsBag', {}))
+          @if(errors.content)
+            <span style="color: #ef4444; font-size: 0.85rem; font-weight: 600; display: block; margin-top: 0.5rem;">
+              ⚠️ {{ errors.content.join(', ') }}
+            </span>
+          @end
         </div>
 
         <div style="display: flex; gap: 1rem; align-items: center;">
@@ -47,6 +56,23 @@
           btn.style.opacity = '0.6'
           btn.style.cursor = 'not-allowed'
         })
+
+        // Compteur de caractères dynamique
+        const textarea = document.getElementById('content')
+        const charCount = document.getElementById('char-count')
+        if (textarea && charCount) {
+          const updateCount = () => {
+            const len = textarea.value.length
+            charCount.textContent = `${len} / 2000`
+            if (len >= 1900) {
+              charCount.style.color = 'var(--orange)'
+            } else {
+              charCount.style.color = 'var(--text-light)'
+            }
+          }
+          textarea.addEventListener('input', updateCount)
+          updateCount() // Initialisation au chargement (si ancienne valeur existante)
+        }
       </script>
     </div>
 
