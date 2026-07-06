@@ -1,0 +1,178 @@
+@layout({ title: 'Lecture des messages bientôt disponible · PolyPress' })
+
+  <style>
+    .countdown-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin: 2.5rem 0;
+      flex-wrap: wrap;
+    }
+    .countdown-item {
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      padding: 1.2rem 1rem;
+      min-width: 90px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      box-shadow: var(--shadow-sm);
+      transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+    }
+    .countdown-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 24px var(--orange-glow);
+      border-color: rgba(249, 115, 22, 0.5);
+    }
+    .countdown-value {
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--orange);
+      line-height: 1.1;
+      text-shadow: 0 2px 10px rgba(249, 115, 22, 0.3);
+    }
+    .countdown-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 600;
+      margin-top: 0.4rem;
+      letter-spacing: 0.08em;
+    }
+
+    @media (max-width: 480px) {
+      .countdown-container {
+        gap: 0.5rem;
+      }
+      .countdown-item {
+        min-width: 75px;
+        padding: 0.8rem 0.6rem;
+      }
+      .countdown-value {
+        font-size: 1.8rem;
+      }
+      .countdown-label {
+        font-size: 0.65rem;
+      }
+    }
+
+    #waiting-btn-share {
+      transition: background 0.25s ease, border-color 0.25s ease, transform 0.2s ease, box-shadow 0.25s ease !important;
+    }
+    #waiting-btn-share:hover {
+      background: var(--blue-main) !important;
+      border-color: var(--blue-main) !important;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(29, 106, 186, 0.3);
+    }
+    #waiting-btn-share:active {
+      transform: translateY(0);
+    }
+  </style>
+
+  <section class="pp-hero" style="min-height: 75vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem 5rem;">
+    <div class="pp-hero__content" style="max-width: 650px;">
+      
+      {{-- Badge d'attente --}}
+      <div class="pp-badge fade-up">
+        <span class="pp-badge__dot"></span>
+        ⏳ Ouverture Prochaine
+      </div>
+
+      {{-- Titre principal --}}
+      <h1 class="pp-hero__title fade-up fade-up-d1" style="margin-bottom: 0.5rem;">
+        Le confessionnal <span class="highlight">ouvre bientôt</span>...
+      </h1>
+
+      {{-- Slogan --}}
+      <span class="pp-hero__slogan fade-up fade-up-d2" style="margin-bottom: 1.5rem;">
+        Rendez-vous dimanche à 08h00
+      </span>
+
+      <p class="pp-hero__desc fade-up fade-up-d3" style="margin-bottom: 2rem; color: rgba(255, 255, 255, 0.85); line-height: 1.7;">
+        Afin de garantir un lancement équitable et palpitant, la lecture des anecdotes et confessions des étudiants de l'ENSPY ne sera accessible qu'à partir de ce <strong>dimanche à 08H00</strong>. 
+        En attendant, tu peux déjà partager tes propres secrets anonymement !
+      </p>
+
+      {{-- Countdown Timer --}}
+      <div class="countdown-container fade-up fade-up-d3" role="timer" aria-label="Compte à rebours avant ouverture">
+        <div class="countdown-item">
+          <span class="countdown-value" id="countdown-days">00</span>
+          <span class="countdown-label">Jours</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="countdown-hours">00</span>
+          <span class="countdown-label">Heures</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="countdown-minutes">00</span>
+          <span class="countdown-label">Minutes</span>
+        </div>
+        <div class="countdown-item">
+          <span class="countdown-value" id="countdown-seconds">00</span>
+          <span class="countdown-label">Secs</span>
+        </div>
+      </div>
+
+      {{-- Boutons d'action --}}
+      <div class="pp-hero__actions fade-up fade-up-d4" style="margin-top: 2rem;">
+        <a href="/" class="pp-btn pp-btn--hero" style="background: rgba(255, 255, 255, 0.12); color: #fff; border: 2px solid rgba(255, 255, 255, 0.3);" id="waiting-btn-home">
+          🏠 Accueil
+        </a>
+        <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="waiting-btn-create">
+          ✍️ Confesser un secret
+        </a>
+        <button class="pp-btn pp-btn--hero pp-share-btn" data-url="/messages" data-text="Les confessions de l'ENSPY arrivent ce dimanche à 08h00 ! Reste à l'écoute sur PolyPress 🤫" id="waiting-btn-share" style="background: rgba(56, 189, 248, 0.12); color: #fff; border: 2px solid rgba(56, 189, 248, 0.3); margin-left: 0;">
+          🔗 Partager
+        </button>
+      </div>
+
+    </div>
+  </section>
+
+  {{-- Script pour le compte à rebours dynamique --}}
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Date cible : 2026-07-12T08:00:00+01:00 (Heure locale Cameroun/Congo/etc.)
+      const targetDate = new Date('2026-07-12T08:00:00+01:00').getTime();
+
+      const daysEl = document.getElementById('countdown-days');
+      const hoursEl = document.getElementById('countdown-hours');
+      const minutesEl = document.getElementById('countdown-minutes');
+      const secondsEl = document.getElementById('countdown-seconds');
+
+      function updateCountdown() {
+        const now = new Date().getTime();
+        const distance = targetDate - now;
+
+        if (distance < 0) {
+          if (daysEl) daysEl.textContent = '00';
+          if (hoursEl) hoursEl.textContent = '00';
+          if (minutesEl) minutesEl.textContent = '00';
+          if (secondsEl) secondsEl.textContent = '00';
+          
+          // Redirection automatique quand le compte à rebours est expiré
+          window.location.href = '/messages';
+          return;
+        }
+
+        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+        if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+        if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+      }
+
+      // Mettre à jour immédiatement puis toutes les secondes
+      updateCountdown();
+      const interval = setInterval(updateCountdown, 1000);
+    });
+  </script>
+
+@end

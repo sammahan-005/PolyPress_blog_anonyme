@@ -13,7 +13,8 @@ import router from '@adonisjs/core/services/router'
 
 router.get('/', [controllers.Messages, 'home']).as('home')
 
-router.get('messages', [controllers.Messages, 'index']).as('messages.index')
+router.get('messages', [controllers.Messages, 'index']).as('messages.index').use(middleware.sundayRestriction())
+router.get('messages/waiting', [controllers.Messages, 'waiting']).as('messages.waiting')
 router.get('messages/create', [controllers.Messages, 'create']).as('messages.create')
 router.post('messages', [controllers.Messages, 'store']).as('messages.store')
 router.get('messages/:id', [controllers.Messages, 'show']).as('messages.show')

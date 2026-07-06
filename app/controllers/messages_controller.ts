@@ -16,6 +16,10 @@ export default class MessagesController {
     return view.render('pages/messages/create')
   }
 
+  async waiting({ view }: HttpContext) {
+    return view.render('pages/messages/waiting')
+  }
+
   async store({ request, response }: HttpContext) {
     const content = request.input('content')
     if (!content || content.trim().length === 0) {
