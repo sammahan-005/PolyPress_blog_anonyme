@@ -12,11 +12,11 @@
     {{-- Open Graph --}}
     <meta property="og:title" content="{{ title || 'PolyPress — Pipo life, Pipo news' }}" />
     <meta property="og:description" content="{{ description || 'Partage tes anecdotes de vie poly en toute discrétion. Le club journal de l\'ENSPY.' }}" />
-    <meta property="og:image" content="/public/images/logo.jpeg" />
+    <meta property="og:image" content="/images/logo.jpeg" />
     <meta property="og:type" content="website" />
 
     {{-- Favicon (emoji provisoire) --}}
-    <link rel="icon" href="/public/favicon.ico" />
+    <link rel="icon" href="/favicon.ico" />
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @stack('dumper')
@@ -32,7 +32,7 @@
         {{-- Marque / Logo --}}
         <a href="/" class="pp-navbar__brand" aria-label="PolyPress — Accueil">
           {{-- Colibri origami SVG minimaliste --}}
-          <img src="/public/images/logo.jpeg" alt="PolyPress" class="pp-navbar__logo" width="28" height="28"/>
+          <img src="/images/logo.jpeg" alt="PolyPress" class="pp-navbar__logo" width="28" height="28"/>
           PolyPress
         </a>
 
