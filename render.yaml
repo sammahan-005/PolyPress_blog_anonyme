@@ -22,6 +22,6 @@ services:
       - key: DB_CONNECTION
         value: pg
       - key: DATABASE_URL
-        sync: false # Set this in Render's dashboard or when creating the blueprint using Neon DB connection string
+        sync: false
       - key: APP_URL
-        value: https://polypress-blog.onrender.com # Replace with your actual Render URL once deployed
+        value: https://polypress-blog.onrender.com
