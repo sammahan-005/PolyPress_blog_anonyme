@@ -35,6 +35,6 @@ router
 
     router.get('admin', [controllers.Admin, 'index']).as('admin.index')
     router.post('admin/messages/:id/toggle-active', [controllers.Admin, 'toggleActive']).as('admin.messages.toggleActive')
-    router.post('admin/messages/:id/delete', [controllers.Admin, 'destroy']).as('admin.messages.delete')
+    // router.post('admin/messages/:id/delete', [controllers.Admin, 'destroy']).as('admin.messages.delete')
   })
   .use(middleware.auth())

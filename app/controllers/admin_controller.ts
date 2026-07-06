@@ -54,11 +54,11 @@ export default class AdminController {
   /**
    * Delete a message.
    */
-  async destroy({ params, response, session }: HttpContext) {
-    const message = await Message.findOrFail(params.id)
-    await message.delete()
+  // async destroy({ params, response, session }: HttpContext) {
+  //   const message = await Message.findOrFail(params.id)
+  //   await message.delete()
 
-    session.flash('success', `Le message #${message.id} a été définitivement supprimé.`)
-    return response.redirect().back()
-  }
+  //   session.flash('success', `Le message #${message.id} a été définitivement supprimé.`)
+  //   return response.redirect().back()
+  // }
 }

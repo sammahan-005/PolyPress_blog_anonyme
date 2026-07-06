@@ -1386,5 +1386,67 @@ h1, h2, h3, h4, h5, h6 { line-height: 1.25; }
   text-decoration: underline;
 }
 
+/* ============================================================
+   MESSAGE DETAIL VIEW & EFFECTS
+   ============================================================ */
+.pp-detail-bg {
+  background: var(--bg);
+  position: relative;
+  overflow: hidden;
+}
+
+.pp-detail-bg::before {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  top: -100px;
+  left: -100px;
+  background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(40px);
+  z-index: 0;
+}
+
+.pp-detail-bg::after {
+  content: '';
+  position: absolute;
+  width: 450px;
+  height: 450px;
+  bottom: -150px;
+  right: -100px;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.12) 0%, transparent 70%);
+  pointer-events: none;
+  filter: blur(50px);
+  z-index: 0;
+}
+
+/* Ensure children in the detail section are positioned above the ambient glow */
+.pp-detail-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Static card details (no click-invitation lift) */
+.pp-card--static {
+  box-shadow: var(--shadow-md);
+}
+
+.pp-card--static:hover {
+  transform: none;
+  box-shadow: var(--shadow-md);
+}
+
+/* Back button micro-animation */
+.back-arrow {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.pp-btn--outline:hover .back-arrow {
+  transform: translateX(-4px);
+}
+
+
 
 

@@ -3,19 +3,19 @@
   description: message.content.substring(0, 150) + (message.content.length > 150 ? '...' : '') 
 })
 
-  <section class="pp-feed" style="padding-top: 5rem; padding-bottom: 5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
+  <section class="pp-feed pp-detail-bg" style="padding-top: 5rem; padding-bottom: 5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 60vh;">
     
     {{-- Bouton Retour --}}
     <div style="margin-bottom: 2rem; align-self: center;">
       <a href="{{ route('messages.index') }}" class="pp-btn pp-btn--outline" style="font-size: 0.95rem; padding: 0.6rem 1.4rem; display: inline-flex; align-items: center; gap: 0.5rem;">
-        👈 Retour aux anecdotes
+        <span class="back-arrow">👈</span> Retour aux anecdotes
       </a>
     </div>
 
     {{-- Carte d'anecdote unique --}}
     <div style="width: 100%; max-width: 600px; margin: 0 auto; padding: 0 1rem;">
-      <article class="pp-card fade-up" id="card-{{ message.id }}" role="article" style="min-height: auto;">
-        <div class="pp-card__quote-icon" aria-hidden="true">"</div>
+      <article class="pp-card pp-card--static fade-up" id="card-{{ message.id }}" role="article" style="min-height: auto;">
+        <div class="pp-card__quote-icon" aria-hidden="true">“</div>
         <p class="pp-card__body" style="font-size: 1.1rem; line-height: 1.8; margin-bottom: 1.5rem;">
           {{ message.content }}
         </p>

@@ -1,6 +1,40 @@
-<h1>{{ error.code }} - Server error</h1>
-<p>
-  This template is rendered by the
-  <a href="http://docs.adonisjs.com/guides/exception-handling#status-pages">status pages feature</a>
-  of the global exception handler.
-</p>
+@layout({ title: '500 - Bug serveur · PolyPress' })
+
+  <section class="pp-hero" style="min-height: 70vh; display: flex; align-items: center; justify-content: center; padding: 6rem 1.5rem 5rem;">
+    <div class="pp-hero__content" style="max-width: 600px;">
+      
+      {{-- Badge d'erreur --}}
+      <div class="pp-badge fade-up" style="background: rgba(239, 68, 68, 0.15); border-color: #ef4444; color: #fca5a5;">
+        <span class="pp-badge__dot" style="background: #ef4444;"></span>
+        💥 Erreur 500
+      </div>
+
+      {{-- Titre principal --}}
+      <h1 class="pp-hero__title fade-up fade-up-d1" style="margin-bottom: 1rem;">
+        Un bug dans la <span class="highlight">matrice</span>...
+      </h1>
+
+      {{-- Slogan ou texte explicatif --}}
+      <span class="pp-hero__slogan fade-up fade-up-d2" style="margin-bottom: 2rem;">
+        500 - Erreur Interne du Serveur
+      </span>
+
+      <p class="pp-hero__desc fade-up fade-up-d3" style="margin-bottom: 2.5rem; color: rgba(255, 255, 255, 0.85);">
+        Une erreur inattendue s'est produite de notre côté. Nos développeurs Pipo ont été alertés et sont sur le coup. Essaie de rafraîchir la page dans quelques instants.
+      </p>
+
+      {{-- Boutons d'action --}}
+      <div class="pp-hero__actions fade-up fade-up-d4" style="display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+        <a href="/" class="pp-btn pp-btn--primary pp-btn--hero" id="error-btn-home">
+          🏠 Retour à l'accueil
+        </a>
+        <a href="/messages" class="pp-btn pp-btn--hero" style="background: rgba(255, 255, 255, 0.12); color: #fff; border: 2px solid rgba(255, 255, 255, 0.3);" id="error-btn-feed">
+          📰 Parcourir les anecdotes
+        </a>
+      </div>
+
+    </div>
+  </section>
+
+@end
+

@@ -24,3 +24,10 @@ yarn-error.log
 
 # Platform specific
 .DS_Store
+
+# AdonisJS generated files
+.adonisjs/
+
+# Deployment / guide files
+render_deployment_neon.md.resolved
+render_deployment_neon.md
