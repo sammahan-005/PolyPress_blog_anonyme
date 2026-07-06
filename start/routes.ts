@@ -21,11 +21,11 @@ router.post('messages/:id/react', [controllers.Reactions, 'toggle']).as('message
 
 router
   .group(() => {
-    router.get('signup', [controllers.NewAccount, 'create'])
-    router.post('signup', [controllers.NewAccount, 'store'])
+    // router.get('signup', [controllers.NewAccount, 'create'])
+    // router.post('signup', [controllers.NewAccount, 'store'])
 
-    // router.get('login', [controllers.Session, 'create'])
-    // router.post('login', [controllers.Session, 'store'])
+    router.get('login', [controllers.Session, 'create'])
+    router.post('login', [controllers.Session, 'store'])
   })
   .use(middleware.guest())
 
