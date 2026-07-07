@@ -17,8 +17,8 @@ router.get('messages', [controllers.Messages, 'index']).as('messages.index').use
 router.get('messages/waiting', [controllers.Messages, 'waiting']).as('messages.waiting')
 router.get('messages/create', [controllers.Messages, 'create']).as('messages.create')
 router.post('messages', [controllers.Messages, 'store']).as('messages.store')
-router.get('messages/:id', [controllers.Messages, 'show']).as('messages.show')
-router.post('messages/:id/react', [controllers.Reactions, 'toggle']).as('messages.react')
+router.get('messages/:id', [controllers.Messages, 'show']).as('messages.show').use(middleware.sundayRestriction())
+router.post('messages/:id/react', [controllers.Reactions, 'toggle']).as('messages.react').use(middleware.sundayRestriction())
 
 router
   .group(() => {
