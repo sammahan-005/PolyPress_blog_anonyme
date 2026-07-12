@@ -29,7 +29,8 @@
         Pipo life, Pipo news
       </span>
 
-      @let(isClosed = new Date() >= new Date('2026-07-12T23:00:00'))
+      {{--  @let(isClosed = new Date() >= new Date('2026-07-12T23:00:00'))  --}}
+      @let(isClosed = true)
 
       @if(isClosed)
         <p class="pp-hero__desc fade-up fade-up-d3">

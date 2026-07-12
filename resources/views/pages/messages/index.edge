@@ -39,7 +39,8 @@
       <h1 class="pp-section-title">Les Anecdotes de l'ENSPY</h1>
       <p class="pp-section-subtitle">Découvrez ce que les Pipo partagent en tout anonymat et exprimez-vous.</p>
       
-      @let(isClosed = new Date() >= new Date('2026-07-12T23:00:00'))
+      {{--  @let(isClosed = new Date() >= new Date('2026-07-12T23:00:00'))  --}}
+      @let(isClosed = true)
       @if(!isClosed)
         <div style="margin-top: 2rem;">
           <a href="{{ route('messages.create') }}" class="pp-btn pp-btn--primary" style="font-size: 0.95rem; padding: 0.7rem 1.5rem;">
