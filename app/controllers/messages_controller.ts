@@ -32,7 +32,8 @@ export default class MessagesController {
   }
 
   async store({ request, response, session }: HttpContext) {
-    const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    // const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    const isClosed = true
     if (isClosed) {
       session.flash('warning', 'Le confessionnal est définitivement fermé. Merci pour votre participation !')
       return response.redirect().toPath('/')
