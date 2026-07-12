@@ -105,6 +105,27 @@
         </div>
       @end
     </div>
+
+    {{-- Pagination --}}
+    @if(messages.lastPage > 1)
+      <div class="pp-pagination" style="display: flex; justify-content: center; align-items: center; gap: 0.5rem; margin-top: 3rem; flex-wrap: wrap;">
+        @if(messages.getPreviousPageUrl())
+          <a href="{{ messages.getPreviousPageUrl() }}" class="pp-btn" style="padding: 0.5rem 1rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">&laquo; Précédent</a>
+        @endif
+
+        <div class="pp-pagination-pages" style="display: flex; gap: 0.35rem; flex-wrap: wrap; justify-content: center;">
+          @each(anchor in messages.getUrlsForRange(1, messages.lastPage))
+            <a href="{{ anchor.url }}" class="pp-btn {{ anchor.isActive ? 'pp-btn--primary' : '' }}" style="padding: 0.5rem 1rem; {{ !anchor.isActive ? 'background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow-sm);' : 'pointer-events: none;' }}">
+              {{ anchor.page }}
+            </a>
+          @end
+        </div>
+
+        @if(messages.getNextPageUrl())
+          <a href="{{ messages.getNextPageUrl() }}" class="pp-btn" style="padding: 0.5rem 1rem; background: var(--surface); color: var(--text); border: 1px solid var(--border); box-shadow: var(--shadow-sm);">Suivant &raquo;</a>
+        @endif
+      </div>
+    @endif
   </section>
 
   {{-- Script de gestion des réactions en AJAX --}}

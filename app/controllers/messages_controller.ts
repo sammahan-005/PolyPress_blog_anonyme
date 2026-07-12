@@ -4,11 +4,17 @@ import Reaction from '#models/reaction'
 import { createMessageValidator } from '#validators/message'
 
 export default class MessagesController {
-  async index({ view }: HttpContext) {
+  async index({ request, view }: HttpContext) {
+    const page = request.input('page', 1)
+    const limit = 20
+
     const messages = await Message.query()
       .where('isActive', true)
       .preload('reactions')
       .orderBy('createdAt', 'desc')
+      .paginate(page, limit)
+
+    messages.baseUrl('/messages')
 
     return view.render('pages/messages/index', { messages })
   }
