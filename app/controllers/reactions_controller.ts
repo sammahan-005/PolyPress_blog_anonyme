@@ -33,12 +33,21 @@ export default class ReactionsController {
 
     if (!existingReaction) {
       // Cas 1 : Nouvelle réaction
-      await Reaction.create({
-        messageId,
-        visitorToken,
-        type,
-      })
-      action = 'created'
+      try {
+        await Reaction.create({
+          messageId,
+          visitorToken,
+          type,
+        })
+        action = 'created'
+      } catch (error: any) {
+        if (error.code === '23505') {
+          // Si la réaction existe déjà (race condition), on considère que l'action est une mise à jour
+          action = 'updated'
+        } else {
+          throw error
+        }
+      }
     } else if (existingReaction.type === type) {
       // Cas 2 : Même réaction cliquée -> On l'enlève
       await existingReaction.delete()

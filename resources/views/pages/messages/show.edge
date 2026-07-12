@@ -73,8 +73,15 @@
       buttons.forEach(button => {
         button.addEventListener('click', async (e) => {
           e.preventDefault();
+
+          // Éviter le double clic
+          if (button.disabled) return;
+
           const type = button.dataset.type;
           
+          // Désactiver tous les boutons de la carte pendant le chargement
+          buttons.forEach(btn => btn.disabled = true);
+
           try {
             const response = await fetch(`/messages/${messageId}/react`, {
               method: 'POST',
@@ -111,6 +118,9 @@
             });
           } catch (error) {
             console.error('Erreur:', error);
+          } finally {
+            // Réactiver les boutons
+            buttons.forEach(btn => btn.disabled = false);
           }
         });
       });

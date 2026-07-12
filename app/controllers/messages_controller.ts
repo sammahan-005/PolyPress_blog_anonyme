@@ -19,7 +19,11 @@ export default class MessagesController {
     return view.render('pages/messages/index', { messages })
   }
 
-  async create({ view }: HttpContext) {
+  async create({ response, view }: HttpContext) {
+    const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    if (isClosed) {
+      return response.redirect().toPath('/')
+    }
     return view.render('pages/messages/create')
   }
 
@@ -28,6 +32,12 @@ export default class MessagesController {
   }
 
   async store({ request, response, session }: HttpContext) {
+    const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    if (isClosed) {
+      session.flash('warning', 'Le confessionnal est définitivement fermé. Merci pour votre participation !')
+      return response.redirect().toPath('/')
+    }
+
     const payload = await request.validateUsing(createMessageValidator)
 
     // Déduplication : rejeter si un message identique a été soumis dans les 2 dernières minutes

@@ -29,16 +29,27 @@
         Pipo life, Pipo news
       </span>
 
-      <p class="pp-hero__desc fade-up fade-up-d3">
-        Partage tes anecdotes, confessions et coups de gueule de la vie à l'ENSPY.
-        Zéro identité révélée, 100 % Pipo authentique.
-      </p>
+      @let(isClosed = new Date() >= new Date('2026-07-12T23:00:00'))
+
+      @if(isClosed)
+        <p class="pp-hero__desc fade-up fade-up-d3">
+          Toute l'équipe de PolyPress vous remercie infiniment pour vos anecdotes ! 🙏<br>
+          Le confessionnal est désormais définitivement fermé, mais vous pouvez toujours parcourir les archives.
+        </p>
+      @else
+        <p class="pp-hero__desc fade-up fade-up-d3">
+          Partage tes anecdotes, confessions et coups de gueule de la vie à l'ENSPY.
+          Zéro identité révélée, 100 % Pipo authentique.
+        </p>
+      @endif
 
       {{-- Boutons d'action --}}
       <div class="pp-hero__actions fade-up fade-up-d4">
-        <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="hero-cta-publier">
-          ✍️ Publier un message anonyme
-        </a>
+        @if(!isClosed)
+          <a href="/messages/create" class="pp-btn pp-btn--primary pp-btn--hero" id="hero-cta-publier">
+            ✍️ Publier un message anonyme
+          </a>
+        @endif
         <a href="/messages" class="pp-btn pp-btn--hero" style="background:rgba(255,255,255,0.12);color:#fff;border:2px solid rgba(255,255,255,0.3);" id="hero-cta-feed">
           📰 Lire les anecdotes
         </a>
@@ -59,7 +70,9 @@
   {{-- ╔══════════════════════════════════════════════════════╗
        ║   SECTION STATS (chiffres clés)                     ║
        ╚══════════════════════════════════════════════════════╝ --}}
-  {{--  <section class="pp-stats" aria-label="Chiffres clés de PolyPress">
+  @if(isClosed)
+  
+  <section class="pp-stats" aria-label="Chiffres clés de PolyPress">
     <div class="pp-stats__grid">
 
       <div class="pp-stat" id="stat-messages">
@@ -83,8 +96,9 @@
       </div>
 
     </div>
-  </section>  --}}
-
+  </section>
+  
+  @endif
 
   {{-- ╔══════════════════════════════════════════════════════╗
        ║   SECTION FEED — Dernières Anecdotes                ║
@@ -259,6 +273,7 @@
   {{-- ╔══════════════════════════════════════════════════════╗
        ║   SECTION CTA FINAL                                 ║
        ╚══════════════════════════════════════════════════════╝ --}}
+  @if(!isClosed)
   <section class="pp-cta" id="publier" aria-labelledby="cta-title">
     <div class="pp-cta__inner">
       <h2 id="cta-title">Prêt à te confesser ?</h2>
@@ -272,5 +287,6 @@
       </a>
     </div>
   </section>
+  @endif
 
 @end
