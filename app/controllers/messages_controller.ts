@@ -33,12 +33,12 @@ export default class MessagesController {
 
     if (duplicate) {
       session.flash('warning', 'Ce message a déjà été soumis. Merci de patienter.')
-      return response.redirect().toPath('/messages/waiting')
+      return response.redirect().toPath('/messages')
     }
 
     await Message.create({ content: payload.content })
     session.flash('success', 'Votre message a bien été soumis.')
-    return response.redirect().toPath('/messages/waiting')
+    return response.redirect().toPath('/messages')
   }
 
   async show({ params, view }: HttpContext) {
