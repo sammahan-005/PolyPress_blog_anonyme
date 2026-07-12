@@ -70,18 +70,18 @@ export default class MessagesController {
 
   async home({ view }: HttpContext) {
     // 1. Nombre total de messages publiés actifs
-    const messagesCountResult = await Message.query().where('isActive', true).count('* as total')
+    const messagesCountResult = await Message.query().count('* as total')
     const messagesCount = Number(messagesCountResult[0].$extras.total || 0)
 
     // 2. Nombre total de réactions générées sur les messages actifs
     const reactionsCountResult = await Reaction.query()
-      .whereIn('messageId', Message.query().select('id').where('isActive', true))
+      .whereIn('messageId', Message.query().select('id')
       .count('* as total')
     const reactionsCount = Number(reactionsCountResult[0].$extras.total || 0)
 
     // 3. Nombre de lecteurs uniques (ayant au moins réagi une fois) sur les messages actifs
     const visitorsCountResult = await Reaction.query()
-      .whereIn('messageId', Message.query().select('id').where('isActive', true))
+      .whereIn('messageId', Message.query().select('id'))
       .countDistinct('visitor_token as total')
     const visitorsCount = Number(visitorsCountResult[0].$extras.total || 0)
 
