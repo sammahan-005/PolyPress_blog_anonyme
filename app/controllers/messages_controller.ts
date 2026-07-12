@@ -75,7 +75,7 @@ export default class MessagesController {
 
     // 2. Nombre total de réactions générées sur les messages actifs
     const reactionsCountResult = await Reaction.query()
-      .whereIn('messageId', Message.query().select('id')
+      .whereIn('messageId', Message.query().select('id'))
       .count('* as total')
     const reactionsCount = Number(reactionsCountResult[0].$extras.total || 0)
 
