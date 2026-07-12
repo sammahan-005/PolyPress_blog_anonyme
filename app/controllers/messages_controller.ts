@@ -20,7 +20,8 @@ export default class MessagesController {
   }
 
   async create({ response, view }: HttpContext) {
-    const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    // const isClosed = new Date() >= new Date('2026-07-12T23:00:00')
+    const isClosed = true;
     if (isClosed) {
       return response.redirect().toPath('/')
     }
